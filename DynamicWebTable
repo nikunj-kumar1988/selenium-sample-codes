@@ -1,0 +1,78 @@
+package com.atos;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class DynamicWebTable {
+
+	public static void main(String[] args) {
+		// System Property for Chrome Driver
+		System.setProperty("webdriver.chrome.driver", "D:\\selenium-jars_and_drivers\\ChromeDriver\\chromedriver.exe");
+		// Instantiate a ChromeDriver class.
+		WebDriver driver = new ChromeDriver();
+		// Launch Website
+		driver.navigate().to("http://mdbootstrap.com/docs/jquery/tables/pagination/");
+		// Maximize the browser
+		driver.manage().window().maximize();
+
+		/*
+		 * List<WebElement> noOfRecords = driver.findElements(By.tagName("tr"));
+		 * System.out.println("Total no of recods : " + noOfRecords.size());
+		 */
+
+		List<WebElement> pagination = driver
+				.findElements(By.xpath("//div[@class='dataTables_paginate paging_simple_numbers']//a"));
+
+		WebElement nextButton = driver.findElement(By.xpath("//*[@id=\"dtBasicExample_next\"]/a"));
+
+		String lastPage = driver.findElement(By.xpath("//*[@id=\"dtBasicExample_paginate\"]/ul/li[7]/a")).getText();
+		int lastPageNumber = Integer.parseInt(lastPage);
+		System.out.println("lat page number is " + lastPageNumber);
+
+		// check if pagination link exists
+		if (pagination.size() > 0) {
+			System.out.println("pagination exists");
+
+			for (int i = 2; i <= lastPageNumber; i++) {
+				String paginateBeforeXpath = "//*[@id=\"dtBasicExample_paginate\"]/ul/li[";
+				String paginateAfterXapth = "]/a";
+
+				String paginateActualPath = paginateBeforeXpath + i + paginateAfterXapth;
+				System.out.println("page actual path " + paginateActualPath.isEmpty());
+				// click on pagination link
+				for (int j = 1; j < pagination.size(); i++) {
+					// Check if nextbutton is enable or not.
+					if (nextButton.isEnabled()) {
+						nextButton.click();
+					} else {
+						System.out.println("pagination not exists");
+					}
+				}
+			}
+		}
+	}
+}
+/*
+ * String paginateBeforeXpath = "//*[@id=\"dtBasicExample_paginate\"]/ul/li[";
+ * String paginateAfterXapth = "]/a";
+ * 
+ * for (int i = 2; i <= 10; i++) { String paginateActualPath =
+ * paginateBeforeXpath + i + paginateAfterXapth;
+ * System.out.println(paginateActualPath);
+ * 
+ * if (!paginateActualPath.isEmpty()) { String beforeXpath =
+ * "//*[@id=\"dtBasicExample\"]/tbody/tr["; String afterXpath = "]/td[1]";
+ * 
+ * for (int j = 1; j <= 5; j++) { String actualPath = beforeXpath + j +
+ * afterXpath; WebElement element = driver.findElement(By.xpath(actualPath));
+ * 
+ * System.out.println(element.getText());
+ * 
+ * if (element.getText().equals("Ashton Cox")) {
+ * System.out.println("**** Text Found *****"); break; } else {
+ * System.out.println("**** Text Not Found *****"); } } }
+ */
